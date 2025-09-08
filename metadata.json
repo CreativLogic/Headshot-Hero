@@ -1,0 +1,6 @@
+{
+  "name": "Headshot Hero",
+  "description": "Upload a photo and use AI to transform it into a high-resolution, professional headshot with various customizable outfits, backgrounds, and lighting styles.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

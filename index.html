@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Headshot Hero</title>
+    <link rel="stylesheet" href="index.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/genai": "https://esm.run/@google/genai"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main class="container">
+      <header class="app-header">
+        <h1>Headshot Hero</h1>
+        <p>
+          Turn your photos into high-resolution, professional headshots in
+          seconds.
+        </p>
+      </header>
+
+      <div class="app-body">
+        <section class="controls-panel">
+          <h2>Customize Your Headshot</h2>
+
+          <div class="upload-section">
+            <label for="image-upload" class="upload-label">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+              <span>Upload Your Photo</span>
+            </label>
+            <input type="file" id="image-upload" accept="image/png, image/jpeg" />
+            <p class="upload-hint">
+              For best results: use a clear, front-facing photo.
+            </p>
+          </div>
+
+          <div id="image-preview-container" class="image-preview-container" hidden>
+            <img id="image-preview" src="#" alt="Your uploaded photo" />
+          </div>
+
+          <div class="options">
+            <div class="form-group">
+              <label for="outfit-select">
+                <i class="fa-solid fa-user-tie"></i> Outfit
+              </label>
+              <select id="outfit-select" class="select-css">
+                <option value="a dark business suit">Business Suit (Dark)</option>
+                <option value="a light-colored business suit">Business Suit (Light)</option>
+                <option value="a professional blouse">Blouse</option>
+                <option value="a casual blazer">Casual Blazer</option>
+                <option value="a turtleneck sweater">Turtleneck Sweater</option>
+                <option value="a crisp dress shirt and dress pants">Dress Shirt & Slacks</option>
+                <option value="a smart casual business attire, like a polo shirt and chinos">Casual Business Attire</option>
+                <option value="a stylish creative professional outfit, like a fashionable jacket over a t-shirt">Creative Professional</option>
+                <option value="elegant formal dress attire">Formal Dress</option>
+                <option value="a tweed blazer with a collared shirt">Academic Look</option>
+                <option value="a casual t-shirt under an open hoodie, startup look">Tech Startup Casual</option>
+                 <option value="a stylish men's fashion outfit with a tightly fit button down shirt, suspenders, and a fedora">Men's Fashion Attire</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="background-select">
+                <i class="fa-solid fa-building"></i> Background
+              </label>
+              <select id="background-select" class="select-css">
+                <option value="a modern, bright office with blurred background">Modern Office</option>
+                <option value="a minimalistic, dark office setting">Minimalist Black Office</option>
+                <option value="a professional podcast studio without headphones">Podcast Studio</option>
+                <option value="an outdoor tech campus with fountains">Outdoor Tech Campus</option>
+                <option value="a luxury hotel lobby">Luxury Hotel Lobby</option>
+                <option value="an abstract monument">Modern Monument</option>
+                <option value="a neutral gray studio backdrop">Studio Backdrop (Gray)</option>
+                <option value="an urban street setting suitable for an interview, with soft focus">Street Interview</option>
+                <option value="a rooftop overlooking a modern city skyline at dusk">Rooftop Cityscape</option>
+                <option value="the entrance of a modern corporate headquarters building">Corporate Headquarters</option>
+                <option value="a bright and airy cafe with a professional ambiance">Cozy Cafe</option>
+                <option value="a minimalist art gallery with large paintings on the wall">Art Gallery</option>
+                <option value="a sophisticated library with a wall of books in the background">Library/Bookcase</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="lighting-select">
+                <i class="fa-solid fa-lightbulb"></i> Lighting
+              </label>
+              <select id="lighting-select" class="select-css">
+                <option value="professional studio lighting">Studio Lighting</option>
+                <option value="soft, natural sunlight">Natural Sunlight</option>
+                <option value="dramatic rim lighting">Dramatic Rim Lighting</option>
+                <option value="soft fill light">Soft Fill Light</option>
+                <option value="warm, golden hour sunlight">Golden Hour</option>
+                <option value="bright, high-key lighting for an airy feel">High-Key (Bright)</option>
+                <option value="moody, low-key lighting with deep shadows">Low-Key (Moody)</option>
+                <option value="cinematic lighting with a slight color grade">Cinematic</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="generate-btn" class="generate-btn" disabled>
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            Generate Headshot
+          </button>
+        </section>
+
+        <section id="result-panel" class="result-panel">
+          <div id="placeholder" class="placeholder">
+            <i class="fa-solid fa-image"></i>
+            <p>Your generated headshot will appear here</p>
+          </div>
+          <div id="loading" class="loading" hidden>
+            <div class="spinner"></div>
+            <p>
+              Generating your masterpiece... <br />
+              This can take a few moments.
+            </p>
+          </div>
+          <div id="result-display" class="result-display" hidden>
+            <img id="result-image" src="#" alt="Generated professional headshot" />
+            <div class="result-actions">
+              <a id="download-btn" class="action-btn" href="#" download="headshot.png">
+                <i class="fa-solid fa-download"></i> Download
+              </a>
+              <button id="start-over-btn" class="action-btn secondary">
+                <i class="fa-solid fa-arrow-rotate-left"></i> Start Over
+              </button>
+            </div>
+          </div>
+           <div id="error-display" class="error-display" hidden>
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <p id="error-message"></p>
+            </div>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="./index.tsx"></script>
+  </body>
+</html>
