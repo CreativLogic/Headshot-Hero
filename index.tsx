@@ -10,6 +10,7 @@ const imageUpload = document.getElementById('image-upload') as HTMLInputElement;
 const imagePreviewContainer = document.getElementById('image-preview-container') as HTMLDivElement;
 const imagePreview = document.getElementById('image-preview') as HTMLImageElement;
 const outfitSelect = document.getElementById('outfit-select') as HTMLSelectElement;
+const hatSelect = document.getElementById('hat-select') as HTMLSelectElement;
 const backgroundSelect = document.getElementById('background-select') as HTMLSelectElement;
 const lightingSelect = document.getElementById('lighting-select') as HTMLSelectElement;
 const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
@@ -21,8 +22,14 @@ const resultDisplay = document.getElementById('result-display') as HTMLDivElemen
 const resultImage = document.getElementById('result-image') as HTMLImageElement;
 const downloadBtn = document.getElementById('download-btn') as HTMLAnchorElement;
 const startOverBtn = document.getElementById('start-over-btn') as HTMLButtonElement;
+const previewBtn = document.getElementById('preview-btn') as HTMLButtonElement;
 const errorDisplay = document.getElementById('error-display') as HTMLDivElement;
 const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;
+
+// Modal elements
+const previewModal = document.getElementById('preview-modal') as HTMLDivElement;
+const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+const closeModalBtn = document.getElementById('close-modal-btn') as HTMLSpanElement;
 
 
 // --- State Management ---
@@ -103,8 +110,16 @@ async function generateHeadshot() {
   const outfit = outfitSelect.value;
   const background = backgroundSelect.value;
   const lighting = lightingSelect.value;
+  const hatSelection = hatSelect.value;
 
-  const prompt = `Transform this photo into a high-resolution, photorealistic professional headshot. The person should be wearing ${outfit}. The background should be ${background}. The lighting should be ${lighting}. It is critical to maintain the person's exact facial features, expression, and any visible tattoos for identity consistency. Do not change their face or ethnicity.`;
+  let hatInstruction = '';
+  if (hatSelection === 'remove') {
+      hatInstruction = 'If the person is wearing a hat, remove it.';
+  } else if (hatSelection !== 'none') {
+      hatInstruction = `The person should be wearing ${hatSelection}.`;
+  }
+
+  const prompt = `Transform this photo into a high-resolution, photorealistic professional headshot. The person should be wearing ${outfit}. ${hatInstruction} The background should be ${background}. The lighting should be ${lighting}. It is critical to maintain the person's exact facial features, expression, and any visible tattoos for identity consistency. Do not change their face or ethnicity.`.trim().replace(/\s+/g, ' ');
 
   try {
     const response = await ai.models.generateContent({
@@ -159,9 +174,38 @@ function resetToInitialState() {
   imagePreviewContainer.hidden = true;
   imagePreview.src = '#';
   generateBtn.disabled = true;
+  closePreviewModal();
 }
+
+/**
+ * Opens the preview modal.
+ */
+function openPreviewModal() {
+    if (resultImage.src && resultImage.src !== location.href) {
+        modalImage.src = resultImage.src;
+        previewModal.style.display = 'flex';
+    }
+}
+
+/**
+ * Closes the preview modal.
+ */
+function closePreviewModal() {
+    previewModal.style.display = 'none';
+}
+
 
 // --- Event Listeners ---
 imageUpload.addEventListener('change', handleImageUpload);
 generateBtn.addEventListener('click', generateHeadshot);
 startOverBtn.addEventListener('click', resetToInitialState);
+
+// Modal event listeners
+previewBtn.addEventListener('click', openPreviewModal);
+closeModalBtn.addEventListener('click', closePreviewModal);
+previewModal.addEventListener('click', (event) => {
+    // Close modal if the background overlay is clicked, but not the image itself
+    if (event.target === previewModal) {
+        closePreviewModal();
+    }
+});

@@ -63,6 +63,26 @@
               </select>
             </div>
 
+             <div class="form-group">
+                <label for="hat-select">
+                  <i class="fa-solid fa-hat-wizard"></i> Hat
+                </label>
+                <select id="hat-select" class="select-css">
+                  <option value="none">Keep Original / No Hat</option>
+                  <option value="remove">Remove Any Hat</option>
+                  <option value="a fedora">Fedora</option>
+                  <option value="a baseball cap">Baseball Cap</option>
+                  <option value="a flat cap">Flat Cap</option>
+                  <option value="a bowler hat">Bowler Hat</option>
+                  <option value="a Panama hat">Panama Hat</option>
+                  <option value="a cowboy hat">Cowboy Hat</option>
+                  <option value="a boater hat">Boater Hat</option>
+                  <option value="a top hat">Top Hat</option>
+                  <option value="a beanie">Beanie</option>
+                  <option value="a cabbie hat">Cabbie Hat</option>
+                </select>
+              </div>
+
             <div class="form-group">
               <label for="background-select">
                 <i class="fa-solid fa-building"></i> Background
@@ -125,6 +145,9 @@
               <a id="download-btn" class="action-btn" href="#" download="headshot.png">
                 <i class="fa-solid fa-download"></i> Download
               </a>
+               <button id="preview-btn" class="action-btn secondary">
+                  <i class="fa-solid fa-expand"></i> Preview
+               </button>
               <button id="start-over-btn" class="action-btn secondary">
                 <i class="fa-solid fa-arrow-rotate-left"></i> Start Over
               </button>
@@ -137,6 +160,12 @@
         </section>
       </div>
     </main>
+
+    <!-- The Modal for Image Preview -->
+    <div id="preview-modal" class="modal">
+      <span id="close-modal-btn" class="close-btn">&times;</span>
+      <img class="modal-content" id="modal-image" alt="Generated headshot preview" />
+    </div>
 
     <script type="module" src="./index.tsx"></script>
   </body>
