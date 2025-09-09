@@ -142,15 +142,37 @@
           <div id="result-display" class="result-display" hidden>
             <img id="result-image" src="#" alt="Generated professional headshot" />
             <div class="result-actions">
-              <a id="download-btn" class="action-btn" href="#" download="headshot.png">
-                <i class="fa-solid fa-download"></i> Download
-              </a>
-               <button id="preview-btn" class="action-btn secondary">
-                  <i class="fa-solid fa-expand"></i> Preview
-               </button>
-              <button id="start-over-btn" class="action-btn secondary">
-                <i class="fa-solid fa-arrow-rotate-left"></i> Start Over
-              </button>
+               <div class="main-actions">
+                  <a id="download-btn" class="action-btn" href="#" download="headshot.png">
+                    <i class="fa-solid fa-download"></i> Download
+                  </a>
+                   <button id="preview-btn" class="action-btn secondary">
+                      <i class="fa-solid fa-expand"></i> Preview
+                   </button>
+                  <button id="start-over-btn" class="action-btn secondary">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> Start Over
+                  </button>
+               </div>
+               <div class="regenerate-controls">
+                 <div class="form-group">
+                   <label for="view-select">Change View</label>
+                    <select id="view-select" class="select-css">
+                      <option value="from a slightly different angle">Slightly Different Angle</option>
+                      <option value="turned slightly to the left">Turned Left</option>
+                      <option value="turned slightly to the right">Turned Right</option>
+                      <option value="as a full body shot in the same style">Full Body Shot</option>
+                      <option value="with a candid laughing expression">Candid Laughing</option>
+                      <option value="looking slightly up towards the camera">Looking Up</option>
+                    </select>
+                 </div>
+                 <div class="form-group">
+                    <label for="custom-view-input">Or, Add Custom Instructions</label>
+                    <textarea id="custom-view-input" class="textarea-css" placeholder="e.g., shaking hands with the Dalai Lama" rows="2"></textarea>
+                 </div>
+                 <button id="regenerate-btn" class="action-btn">
+                   <i class="fa-solid fa-arrows-rotate"></i> Regenerate
+                 </button>
+               </div>
             </div>
           </div>
            <div id="error-display" class="error-display" hidden>

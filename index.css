@@ -175,11 +175,24 @@ body {
   background-position: right 0.75rem center;
 }
 
-.select-css:focus {
+.select-css:focus, .textarea-css:focus {
   outline: none;
   border-color: var(--primary-accent);
   box-shadow: 0 0 0 2px rgba(106, 90, 205, 0.3);
 }
+
+.textarea-css {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.75rem;
+  font-size: 1rem;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+}
+
 
 /* Generate Button */
 .generate-btn {
@@ -256,10 +269,40 @@ body {
 
 .result-actions {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
 }
+
+.main-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.regenerate-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.regenerate-controls .form-group {
+    gap: 0.25rem;
+}
+
+.regenerate-controls .form-group label {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
 
 .action-btn {
   background-color: var(--primary-accent);
@@ -289,6 +332,17 @@ body {
 
 .action-btn.secondary:hover {
   background-color: #4a4a4a;
+}
+
+#regenerate-btn {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+#regenerate-btn:disabled {
+  background-color: #3a3a3a;
+  color: var(--text-secondary);
+  cursor: not-allowed;
 }
 
 /* Loading Spinner */

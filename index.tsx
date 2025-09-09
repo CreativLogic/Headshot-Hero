@@ -26,6 +26,11 @@ const previewBtn = document.getElementById('preview-btn') as HTMLButtonElement;
 const errorDisplay = document.getElementById('error-display') as HTMLDivElement;
 const errorMessage = document.getElementById('error-message') as HTMLParagraphElement;
 
+// Regeneration controls
+const viewSelect = document.getElementById('view-select') as HTMLSelectElement;
+const customViewInput = document.getElementById('custom-view-input') as HTMLTextAreaElement;
+const regenerateBtn = document.getElementById('regenerate-btn') as HTMLButtonElement;
+
 // Modal elements
 const previewModal = document.getElementById('preview-modal') as HTMLDivElement;
 const modalImage = document.getElementById('modal-image') as HTMLImageElement;
@@ -34,6 +39,8 @@ const closeModalBtn = document.getElementById('close-modal-btn') as HTMLSpanElem
 
 // --- State Management ---
 let uploadedImage: { base64: string; mimeType: string } | null = null;
+let currentResultImage: { base64: string; mimeType: string } | null = null;
+
 
 // --- API Initialization ---
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
@@ -106,6 +113,7 @@ async function generateHeadshot() {
 
   showView('loading');
   generateBtn.disabled = true;
+  regenerateBtn.disabled = true;
 
   const outfit = outfitSelect.value;
   const background = backgroundSelect.value;
@@ -148,6 +156,9 @@ async function generateHeadshot() {
     if (imagePart && imagePart.inlineData) {
         const base64Image = imagePart.inlineData.data;
         const mimeType = imagePart.inlineData.mimeType || 'image/png';
+
+        currentResultImage = { base64: base64Image, mimeType: mimeType };
+
         const imageUrl = `data:${mimeType};base64,${base64Image}`;
         resultImage.src = imageUrl;
         downloadBtn.href = imageUrl;
@@ -161,7 +172,85 @@ async function generateHeadshot() {
     showError('An error occurred while generating the headshot. Please try again.');
   } finally {
     generateBtn.disabled = false;
+    regenerateBtn.disabled = false;
   }
+}
+
+/**
+ * Regenerates the headshot with a new view, using the current result as a base.
+ */
+async function regenerateView() {
+    if (!currentResultImage) {
+        showError('No image to regenerate. Please generate a headshot first.');
+        return;
+    }
+
+    showView('loading');
+    generateBtn.disabled = true;
+    regenerateBtn.disabled = true;
+
+    const outfit = outfitSelect.value;
+    const background = backgroundSelect.value;
+    const lighting = lightingSelect.value;
+    const hatSelection = hatSelect.value;
+    
+    const customInstruction = customViewInput.value.trim();
+    const selectedView = viewSelect.value;
+    const changeInstruction = customInstruction || selectedView; // Prioritize custom input
+
+    let hatInstruction = '';
+    if (hatSelection === 'remove') {
+        hatInstruction = 'If the person is wearing a hat, remove it.';
+    } else if (hatSelection !== 'none') {
+        hatInstruction = `The person should be wearing ${hatSelection}.`;
+    }
+
+    const prompt = `Using the provided image as a base, create a new version of this professional headshot with the following change: "${changeInstruction}". Maintain the same person, outfit (${outfit}), background (${background}), lighting (${lighting}), and overall style. ${hatInstruction} It is critical to maintain the person's exact facial features for identity consistency. Do not change their face.`.trim().replace(/\s+/g, ' ');
+
+    try {
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash-image-preview',
+            contents: {
+                parts: [
+                    {
+                        inlineData: {
+                            data: currentResultImage.base64,
+                            mimeType: currentResultImage.mimeType,
+                        },
+                    },
+                    {
+                        text: prompt,
+                    },
+                ],
+            },
+            config: {
+                responseModalities: [Modality.IMAGE, Modality.TEXT],
+            },
+        });
+
+        const imagePart = response.candidates?.[0]?.content?.parts?.find(part => part.inlineData);
+
+        if (imagePart && imagePart.inlineData) {
+            const base64Image = imagePart.inlineData.data;
+            const mimeType = imagePart.inlineData.mimeType || 'image/png';
+            
+            currentResultImage = { base64: base64Image, mimeType: mimeType };
+            
+            const imageUrl = `data:${mimeType};base64,${base64Image}`;
+            resultImage.src = imageUrl;
+            downloadBtn.href = imageUrl;
+            showView('result');
+        } else {
+            showError('The model did not return a new image. Please try again.');
+        }
+
+    } catch (error) {
+        console.error('API Error during regeneration:', error);
+        showError('An error occurred while regenerating the headshot. Please try again.');
+    } finally {
+        generateBtn.disabled = false;
+        regenerateBtn.disabled = false;
+    }
 }
 
 /**
@@ -171,9 +260,11 @@ function resetToInitialState() {
   showView('placeholder');
   imageUpload.value = '';
   uploadedImage = null;
+  currentResultImage = null;
   imagePreviewContainer.hidden = true;
   imagePreview.src = '#';
   generateBtn.disabled = true;
+  customViewInput.value = '';
   closePreviewModal();
 }
 
@@ -198,6 +289,7 @@ function closePreviewModal() {
 // --- Event Listeners ---
 imageUpload.addEventListener('change', handleImageUpload);
 generateBtn.addEventListener('click', generateHeadshot);
+regenerateBtn.addEventListener('click', regenerateView);
 startOverBtn.addEventListener('click', resetToInitialState);
 
 // Modal event listeners
